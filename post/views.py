@@ -14,13 +14,14 @@ from django.contrib import messages
 class PostIndex(ListView):
     model = Post
     template_name = 'post/index.html'
-    paginate_by = 3
+    paginate_by = 6
     context_object_name = 'posts' #nome do objeto para chamar no Template
 
 
     def get_queryset(self):
         qs = super().get_queryset() # chamando o get_queryset padrao e adicionando mais coisas
         qs = qs.order_by('-id').filter(publicado_post=True) #ordem decrecente pelo id e filtrando por post publicado
+        qs = qs.select_related('categoria_post')
         qs = qs.annotate(        #contar
             numero_comentarios = Count(
                 #caso
